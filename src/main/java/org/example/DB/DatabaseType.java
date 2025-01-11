@@ -1,7 +1,9 @@
 package org.example.DB;
 
 public enum DatabaseType {
-    MYSQL("MySQL"), MONGODB("MongoDB");
+    MYSQL("MySQL"),
+    MONGODB("MongoDB"),
+    SQLITE("SQLite");
 
     private final String displayName;
 

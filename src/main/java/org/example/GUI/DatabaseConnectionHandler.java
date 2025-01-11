@@ -1,15 +1,21 @@
 package org.example.GUI;
 
 import org.example.DB.ConnectionManagerSingleton;
-import org.example.DB.DBConnection;
-import org.example.DB.DBConnectionFactory;
+import org.example.DB.DBConnectionFactory.*;
 import org.example.DB.DatabaseType;
+import org.example.DB.DBConnection.DBConnection;
 
+import java.util.Map;
 import javax.swing.*;
 
 public class DatabaseConnectionHandler {
 
     private DatabaseConnectionForm form;
+    private Map<DatabaseType, DBConnectionFactory> factoryDict = Map.of(
+        DatabaseType.MYSQL, new MySQLConnectionFactory(),
+        DatabaseType.MONGODB, new MongoDBConnectionFactory(),
+        DatabaseType.SQLITE, new SQLiteConnectionFactory()
+    );
 
     public DatabaseConnectionHandler(DatabaseConnectionForm form) {
         this.form = form;
@@ -27,7 +33,7 @@ public class DatabaseConnectionHandler {
 
         try {
             ConnectionManagerSingleton.getInstance().closeConnection();
-            DBConnection dbConnection = DBConnectionFactory.createConnection(dbType);
+            DBConnection dbConnection = factoryDict.get(dbType).createConnection();
             ConnectionManagerSingleton.getInstance().setConnetion(dbConnection);
             ConnectionManagerSingleton.getInstance().openConnection(host, username, password, dbName);
             ConnectionManagerSingleton.getInstance().getConnection().getAllEntities();

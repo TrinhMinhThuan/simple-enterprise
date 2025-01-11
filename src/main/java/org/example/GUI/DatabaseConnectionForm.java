@@ -2,6 +2,9 @@ package org.example.GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
+import org.example.DB.DatabaseType;
 
 public class DatabaseConnectionForm {
 
@@ -19,7 +22,12 @@ public class DatabaseConnectionForm {
         frame.setSize(400, 300);
         frame.setLayout(new GridLayout(6, 2, 10, 10));
 
-        dbTypeComboBox = new JComboBox<>(new String[]{"MySQL", "MongoDB"});
+        ArrayList<String> DBTypeList = new ArrayList<>();
+        for (DatabaseType type: DatabaseType.values()){
+            DBTypeList.add(type.getDisplayName());
+        }
+
+        dbTypeComboBox = new JComboBox<>(DBTypeList.toArray(new String[0]));
         hostField = new JTextField();
         dbNameField = new JTextField();
         usernameField = new JTextField();

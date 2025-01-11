@@ -2,6 +2,8 @@ package org.example.DB;
 
 import java.sql.SQLException;
 
+import org.example.DB.DBConnection.DBConnection;
+
 public class ConnectionManagerSingleton {
 
     private static ConnectionManagerSingleton instance;
