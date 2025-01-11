@@ -51,7 +51,7 @@ public class MySQLConnection extends DBConnection {
     }
 
     @Override
-    public boolean deleteElement(String tableName, Object object) {
+    public boolean deleteElement(String tableName, String key, Object value) {
         return false;
     }
 

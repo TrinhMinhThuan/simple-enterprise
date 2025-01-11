@@ -2,6 +2,7 @@ package org.example.DB.DBConnection;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DBConnection {
 
@@ -40,4 +41,7 @@ public abstract class DBConnection {
     public abstract boolean deleteElement(String tableName, String key, Object value);
 
     public abstract void disconnect() throws SQLException;
+
+    public abstract List<Map<String,String>> getAllFieldName(String tableName);
+
 }

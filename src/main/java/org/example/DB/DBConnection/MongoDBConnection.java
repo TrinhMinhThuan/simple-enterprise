@@ -11,9 +11,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class MongoDBConnection extends DBConnection {
@@ -151,6 +149,43 @@ public class MongoDBConnection extends DBConnection {
         return false; // Không có kết nối MongoDB
     }
 
+    @Override
+    public List<Map<String, String>> getAllFieldName(String tableName) {
+        List<Map<String, String>> fieldDetails = new ArrayList<>();
+        if (connection != null) {
+            try {
+                // Lấy cơ sở dữ liệu MongoDB
+                MongoDatabase database = ((MongoClient) connection).getDatabase(dbName);
+                MongoCollection<Document> collection = database.getCollection(tableName);
+
+                // Lấy một document từ collection
+                Document doc = collection.find().first();
+
+                if (doc != null) {
+                    // Duyệt qua tất cả các trường và lấy kiểu dữ liệu của từng trường
+                    for (String fieldName : doc.keySet()) {
+                        Object value = doc.get(fieldName);
+                        String fieldType = value != null ? value.getClass().getSimpleName() : "null";
+
+                        // Tạo Map để lưu thông tin fieldName và fieldType
+                        Map<String, String> fieldInfo = new HashMap<>();
+                        fieldInfo.put("fieldName", fieldName);
+                        fieldInfo.put("fieldType", fieldType);
+
+                        // Thêm Map vào danh sách
+                        fieldDetails.add(fieldInfo);
+                    }
+                } else {
+                    System.out.println("No document found in the collection: " + tableName);
+                }
+            } catch (Exception e) {
+                System.out.println("Failed to get field names: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No active MongoDB connection.");
+        }
+        return fieldDetails;
+    }
 
 
     @Override
