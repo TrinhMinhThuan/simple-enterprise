@@ -1,6 +1,7 @@
 package org.example.DB.DBConnection;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public abstract class DBConnection {
 
@@ -30,8 +31,8 @@ public abstract class DBConnection {
 
 
     // Phương thức trừu tượng getAllEntities để lấy thông tin về các entities (bảng)
-    public abstract void getAllEntities();
+    public abstract List<String> getAllEntities();
 
-
+    public abstract boolean addElement(String tableName, Object object);
     public abstract void disconnect() throws SQLException;
 }
