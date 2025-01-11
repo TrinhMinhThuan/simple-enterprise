@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MongoDBConnection extends DBConnection {
@@ -72,7 +73,7 @@ public class MongoDBConnection extends DBConnection {
     }
 
     @Override
-    public boolean editElement(String tableName, Object object, Object idValue) {
+    public boolean editElement(String tableName, Object object, String key, Object value) {
         if (connection != null) {
             try {
                 // Lấy cơ sở dữ liệu MongoDB
@@ -90,11 +91,12 @@ public class MongoDBConnection extends DBConnection {
                     }
                 }
 
-                // Kiểm tra nếu idValue là chuỗi, chuyển đổi sang ObjectId nếu cần
-                idValue = idValue instanceof String ? new ObjectId(String.valueOf(idValue)) : idValue;
-
+                // Kiểm tra nếu value là chuỗi và là biến _id, chuyển đổi sang ObjectId nếu cần
+                if (Objects.equals(key, "_id")) {
+                    value = value instanceof String ? new ObjectId(String.valueOf(value)) : value;
+                }
                 // Tạo filter với _id từ tham số idValue
-                Bson filter = new Document("_id", idValue);  // Tạo filter với _id từ tham số
+                Bson filter = new Document(key, value);  // Tạo filter với từ tham số
 
                 // Cập nhật tài liệu (chỉ cập nhật các trường khác ngoài _id)
                 Bson updateOperation = new Document("$set", updatedDoc);
@@ -116,27 +118,29 @@ public class MongoDBConnection extends DBConnection {
     }
 
     @Override
-    public boolean deleteElement(String tableName, Object idValue) {
+    public boolean deleteElement(String tableName, String key, Object value) {
         if (connection != null) {
             try {
                 // Lấy cơ sở dữ liệu MongoDB
                 MongoDatabase database = ((MongoClient) connection).getDatabase(dbName);
                 MongoCollection<Document> collection = database.getCollection(tableName);
 
-                // Chuyển idValue sang ObjectId nếu cần
-                Object id = idValue instanceof String ? new ObjectId(String.valueOf(idValue)) : idValue;
+                // Kiểm tra nếu key là _id và value là chuỗi, chuyển value thành ObjectId nếu cần
+                if (Objects.equals(key, "_id") && value instanceof String) {
+                    value = new ObjectId((String) value); // Chuyển value thành ObjectId
+                }
 
-                // Tạo filter với _id từ tham số idValue
-                Bson filter = new Document("_id", id);  // Tạo filter với _id từ tham số
+                // Tạo filter với key và value từ tham số truyền vào
+                Bson filter = new Document(key, value);
 
-                // Xóa tài liệu
+                // Xóa tài liệu dựa trên filter
                 DeleteResult result = collection.deleteOne(filter);
 
                 // Kiểm tra kết quả
                 if (result.getDeletedCount() > 0) {
                     return true; // Thành công
                 } else {
-                    System.out.println("No document found with the specified _id.");
+                    System.out.println("No document found with the specified key.");
                     return false; // Không tìm thấy tài liệu
                 }
             } catch (MongoException e) {
@@ -146,6 +150,7 @@ public class MongoDBConnection extends DBConnection {
         }
         return false; // Không có kết nối MongoDB
     }
+
 
 
     @Override

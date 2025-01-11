@@ -46,7 +46,7 @@ public class MySQLConnection extends DBConnection {
     }
 
     @Override
-    public boolean editElement(String tableName, Object object, Object b) {
+    public boolean editElement(String tableName, Object object, String key, Object value) {
         return false;
     }
 

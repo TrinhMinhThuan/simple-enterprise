@@ -34,8 +34,10 @@ public abstract class DBConnection {
     public abstract List<String> getAllEntities();
 
     public abstract boolean addElement(String tableName, Object object);
-    public abstract boolean editElement(String tableName, Object object, Object b);
-    public abstract boolean deleteElement(String tableName, Object object);
+    public abstract boolean editElement(String tableName, Object object,
+                                        String key, //Tên khóa chính để tìm
+                                        Object value); // Gía trị khóa chính
+    public abstract boolean deleteElement(String tableName, String key, Object value);
 
     public abstract void disconnect() throws SQLException;
 }
