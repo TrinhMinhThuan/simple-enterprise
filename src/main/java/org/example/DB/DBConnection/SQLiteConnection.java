@@ -3,6 +3,7 @@ package org.example.DB.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SQLiteConnection extends DBConnection {
 
@@ -58,5 +59,15 @@ public class SQLiteConnection extends DBConnection {
         if (connection != null) {
             ((Connection) connection).close();
         }
+    }
+
+    @Override
+    public List<Map<String, String>> getAllFieldName(String tableName) {
+        return List.of();
+    }
+
+    @Override
+    public <T> List<T> getAllDataTable(String tableName, Class<T> clazz) {
+        return List.of();
     }
 }

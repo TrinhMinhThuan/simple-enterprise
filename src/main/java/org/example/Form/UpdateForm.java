@@ -1,8 +1,11 @@
 package org.example.Form;// UpdateForm.java
 
+import org.example.DB.ConnectionManagerSingleton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,23 +65,43 @@ public class UpdateForm<T> extends JDialog {
 
     private void onSave() {
         try {
+            String id = "";
             for (int i = 0; i < fields.size(); i++) {
                 Field field = fields.get(i);
                 field.setAccessible(true);
 
                 String value = textFields[i].getText();
+                if (i == 0) {
+                    id = value;
+                }
+
                 if (field.getType() == String.class) {
                     field.set(currentObject, value);
-                } else if (field.getType() == int.class) {
+                } else if (field.getType() == int.class || field.getType() == Integer.class) {
                     field.set(currentObject, Integer.parseInt(value));
-                } else if (field.getType() == double.class) {
+                } else if (field.getType() == double.class || field.getType() == Double.class) {
                     field.set(currentObject, Double.parseDouble(value));
+                } else if (field.getType() == Object.class) {
+                    // Xử lý Object: có thể là một đối tượng cụ thể hoặc giá trị mặc định
+                    if (value != null && !value.isEmpty()) {
+                        // Giả sử bạn có một cách để tạo một đối tượng từ chuỗi
+                        field.set(currentObject, value);  // Bạn có thể thay đổi cách này tùy thuộc vào loại Object cần gán
+                    } else {
+                        // Đối với giá trị mặc định hoặc null
+                        field.set(currentObject, null);  // Hoặc tạo một đối tượng mặc định nếu cần
+                    }
+                } else if (field.getType() == ArrayList.class) {
+                    field.set(currentObject, value);
                 }
                 // Thêm các kiểu dữ liệu khác nếu cần
             }
 
             // Cập nhật lại dữ liệu trong bảng
             baseForm.updateTable();
+            ConnectionManagerSingleton.getInstance().getConnection().editElement(
+                    baseForm.data.get(0).getClass().getSimpleName(), currentObject,
+                    baseForm.table.getColumnName(0), id
+            );
 
             this.dispose();  // Đóng form
         } catch (Exception e) {

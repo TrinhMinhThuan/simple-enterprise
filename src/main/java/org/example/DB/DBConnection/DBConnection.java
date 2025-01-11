@@ -44,4 +44,7 @@ public abstract class DBConnection {
 
     public abstract List<Map<String,String>> getAllFieldName(String tableName);
 
+    public abstract <T> List<T> getAllDataTable(String tableName, Class<T> clazz);
+
+
 }

@@ -23,14 +23,14 @@ public class ConnectionManagerSingleton {
         return instance;
     }
 
-    public void setConnetion (DBConnection connetion) {
+    public static void setConnetion(DBConnection connetion) {
         currentConnection = connetion;
     }
 
 
 
     // Phương thức mở kết nối mới
-    public void openConnection(String uri, String username, String password, String dbName) throws SQLException {
+    public static void openConnection(String uri, String username, String password, String dbName) throws SQLException {
         // Mở kết nối mới và lưu vào biến tĩnh
         currentConnection.setConnectionDetails(uri, username, password, dbName);
         currentConnection.connect();
