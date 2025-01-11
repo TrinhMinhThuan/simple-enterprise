@@ -43,6 +43,16 @@ public class SQLiteConnection extends DBConnection {
     }
 
     @Override
+    public boolean editElement(String tableName, Object object, Object b) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteElement(String tableName, Object object) {
+        return false;
+    }
+
+    @Override
     public void disconnect() throws SQLException {
         if (connection != null) {
             ((Connection) connection).close();

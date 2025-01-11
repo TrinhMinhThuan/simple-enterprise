@@ -34,5 +34,8 @@ public abstract class DBConnection {
     public abstract List<String> getAllEntities();
 
     public abstract boolean addElement(String tableName, Object object);
+    public abstract boolean editElement(String tableName, Object object, Object b);
+    public abstract boolean deleteElement(String tableName, Object object);
+
     public abstract void disconnect() throws SQLException;
 }

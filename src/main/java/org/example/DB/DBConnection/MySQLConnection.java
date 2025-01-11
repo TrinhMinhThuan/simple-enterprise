@@ -40,6 +40,20 @@ public class MySQLConnection extends DBConnection {
         return null;
     }
 
+    @Override
+    public boolean addElement(String tableName, Object object) {
+        return false;
+    }
+
+    @Override
+    public boolean editElement(String tableName, Object object, Object b) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteElement(String tableName, Object object) {
+        return false;
+    }
 
 
     @Override
