@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class UpdateForm<T> extends JDialog {
 
@@ -43,6 +44,9 @@ public class UpdateForm<T> extends JDialog {
 
             panel.add(label);
             panel.add(textField);
+            if(i == 0) {
+                textField.setEnabled(false);
+            }
 
             // Điền sẵn dữ liệu vào text field
             try {

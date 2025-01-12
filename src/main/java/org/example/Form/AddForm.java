@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class AddForm<T> extends JDialog {
 
@@ -39,6 +40,10 @@ public class AddForm<T> extends JDialog {
             JLabel label = new JLabel(field.getName());
             JTextField textField = new JTextField();
             textFields[i] = textField;
+
+            if(i == 0) {
+                textField.setEnabled(false);
+            }
 
             panel.add(label);
             panel.add(textField);
