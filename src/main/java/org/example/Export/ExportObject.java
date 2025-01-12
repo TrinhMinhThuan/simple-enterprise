@@ -1,6 +1,7 @@
 package org.example.Export;
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -23,17 +24,17 @@ public class ExportObject {
             String fieldType = attribute.get("fieldType"); // Lấy kiểu dữ liệu từ fieldType
 
             // Thêm thuộc tính với kiểu dữ liệu tương ứng
-            sourceCode.append("\tprivate ").append(fieldType).append(" ").append(fieldName).append(";\n");
+            sourceCode.append("\tprivate ").append(getType(fieldType)).append(" ").append(fieldName).append(";\n");
 
             // Getter
-            sourceCode.append("\tpublic ").append(fieldType).append(" get").append(capitalize(fieldName)).append("() {\n");
-            sourceCode.append("\t\treturn this.").append(fieldName).append(";\n");
-            sourceCode.append("\t}\n");
-
-            // Setter
-            sourceCode.append("\tpublic void set").append(capitalize(fieldName)).append("(").append(fieldType).append(" ").append(fieldName).append(") {\n");
-            sourceCode.append("\t\tthis.").append(fieldName).append(" = ").append(fieldName).append(";\n");
-            sourceCode.append("\t}\n\n");
+//            sourceCode.append("\tpublic ").append(fieldType).append(" get").append(capitalize(fieldName)).append("() {\n");
+//            sourceCode.append("\t\treturn this.").append(fieldName).append(";\n");
+//            sourceCode.append("\t}\n");
+//
+//            // Setter
+//            sourceCode.append("\tpublic void set").append(capitalize(fieldName)).append("(").append(fieldType).append(" ").append(fieldName).append(") {\n");
+//            sourceCode.append("\t\tthis.").append(fieldName).append(" = ").append(fieldName).append(";\n");
+//            sourceCode.append("\t}\n\n");
         }
 
         // Constructor mặc định
@@ -46,17 +47,90 @@ public class ExportObject {
     }
 
     // Hỗ trợ viết hoa chữ cái đầu
-    private static String capitalize(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
+    private static String getType(String type) {
+        if (
+                type.equalsIgnoreCase("string")
+                || type.equalsIgnoreCase("varchar")
+                || type.equalsIgnoreCase("nvarchar")
+                || type.equalsIgnoreCase("char")
+                || type.equalsIgnoreCase("text")
+                || type.equalsIgnoreCase("longtext")
+        ) {
+            return "String";
         }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+        if (
+                type.equalsIgnoreCase("integer")
+                || type.equalsIgnoreCase("int")
+                || type.equalsIgnoreCase("year")
+        ) {
+            return "Integer";
+        }
+        if (
+                type.equalsIgnoreCase("float")
+                || type.equalsIgnoreCase("double")
+                || type.equalsIgnoreCase("real")
+        ) {
+            return "Double";
+        }
+        if (
+                type.equalsIgnoreCase("arraylist")
+                || type.equalsIgnoreCase("list")
+                || type.equalsIgnoreCase("array")
+        ) {
+            return "ArrayList";
+        }
+        if (
+                type.equalsIgnoreCase("objectid")
+        ) {
+            return "ObjectId";
+        }
+        if (
+                type.equalsIgnoreCase("boolean")
+                || type.equalsIgnoreCase("bool")
+        ) {
+            return "ObjectId";
+        }
+        if (
+                type.equalsIgnoreCase("date")
+        ) {
+            return "LocalDate";
+        }
+        if (
+                type.equalsIgnoreCase("datetime")
+        ) {
+            return "LocalDateTime";
+        }
+        if (
+                type.equalsIgnoreCase("timestamp")
+        ) {
+            return "Timestamp";
+        }
+        return "Object";
     }
 
     private static void writeFile(String sourceCode, String outputFilePath) {
-        try (FileWriter writer = new FileWriter(outputFilePath)) {
-            writer.write(sourceCode);  // Ghi mã nguồn vào file
-            System.out.println("Mã nguồn đã được ghi vào file: " + outputFilePath);
+        try {
+            // Tạo đối tượng File từ đường dẫn
+            File outputFile = new File(outputFilePath);
+
+            // Lấy thư mục cha từ đường dẫn file
+            File parentDirectory = outputFile.getParentFile();
+
+            // Kiểm tra và tạo thư mục nếu chưa tồn tại
+            if (parentDirectory != null && !parentDirectory.exists()) {
+                boolean created = parentDirectory.mkdirs();
+                if (created) {
+                    System.out.println("Thư mục đã được tạo: " + parentDirectory.getAbsolutePath());
+                } else {
+                    System.out.println("Không thể tạo thư mục: " + parentDirectory.getAbsolutePath());
+                }
+            }
+
+            // Ghi mã nguồn vào file
+            try (FileWriter writer = new FileWriter(outputFile)) {
+                writer.write(sourceCode);
+                System.out.println("Mã nguồn đã được ghi vào file: " + outputFilePath);
+            }
         } catch (IOException e) {
             System.err.println("Lỗi khi ghi mã nguồn vào file: " + e.getMessage());
         }

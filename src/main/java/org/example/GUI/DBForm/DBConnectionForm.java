@@ -12,10 +12,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class DBConnectionForm {
+public class DBConnectionForm  extends JFrame {
 
     private static Map<DatabaseType, DBClientFactory> factoryDict = Map.of(
             DatabaseType.MYSQL, new MySQLClientFactory(),
@@ -115,8 +116,8 @@ public class DBConnectionForm {
             String selectedDbType = Objects.requireNonNull(dbTypeComboBox.getSelectedItem()).toString();
             DatabaseType dbType = DatabaseType.valueOf(selectedDbType.toUpperCase());
 
-            if (host.isEmpty() || username.isEmpty() || password.isEmpty() || dbName.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Please fill all fields!", "Error", JOptionPane.ERROR_MESSAGE);
+            if (host.isEmpty() && username.isEmpty() && password.isEmpty() && dbName.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill connect information!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -175,6 +176,19 @@ public class DBConnectionForm {
     public static void main(String[] args) {
         // Gọi hàm createForm và in kết quả
         boolean isConnected = createForm();
+
+        List<String> tableNames = ConnectionManagerSingleton.getInstance().getConnection().getAllEntities();
+
+        // Tạo giao diện
+        DBTableForm dbTableForm = new DBTableForm();
+        boolean isCreated = dbTableForm.createForm(tableNames);
+
+        // Kiểm tra xem giao diện có được tạo thành công hay không
+        if (isCreated) {
+            System.out.println("Giao diện được tạo thành công!");
+        } else {
+            System.out.println("Giao diện không được tạo thành công!");
+        }
         if (isConnected) {
             System.out.println("Database connection successful!");
         } else {

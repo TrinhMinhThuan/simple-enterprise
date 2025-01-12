@@ -64,8 +64,9 @@ public class MySQLClient extends DBClient {
 
     @Override
     public void disconnect() throws SQLException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'disconnect'");
+        if (connection != null) {
+            ((Connection) connection).close();
+        }
     }
 
     @Override
