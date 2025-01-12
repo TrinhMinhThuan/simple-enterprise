@@ -33,7 +33,7 @@ public class ExportObject {
             // Setter
             sourceCode.append("\tpublic void set").append(capitalize(fieldName)).append("(").append(fieldType).append(" ").append(fieldName).append(") {\n");
             sourceCode.append("\t\tthis.").append(fieldName).append(" = ").append(fieldName).append(";\n");
-            sourceCode.append("\t}\n");
+            sourceCode.append("\t}\n\n");
         }
 
         // Constructor mặc định

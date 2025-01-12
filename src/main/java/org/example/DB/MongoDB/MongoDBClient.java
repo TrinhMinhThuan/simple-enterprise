@@ -221,13 +221,37 @@ public class MongoDBClient extends DBClient {
                     for (String fieldName : doc.keySet()) {
                         try {
                             Field field = clazz.getDeclaredField(fieldName); // Tìm trường trong lớp T
-                            field.setAccessible(true);  // Cho phép truy cập vào trường private
-                            field.set(obj, doc.get(fieldName)); // Gán giá trị vào trường của đối tượng T
+                            field.setAccessible(true); // Cho phép truy cập vào trường private
+
+                            Object value = doc.get(fieldName); // Giá trị từ MongoDB
+
+                            Class<?> fieldType = field.getType();
+                            if (value != null && !fieldType.isAssignableFrom(value.getClass())) {
+                                if (fieldType == Double.class) {
+                                    value = Double.valueOf(value.toString());
+                                } else if (fieldType == Integer.class) {
+                                    value = Integer.valueOf(value.toString());
+                                } else if (fieldType == Long.class) {
+                                    value = Long.valueOf(value.toString());
+                                } else if (fieldType == String.class) {
+                                    value = value.toString();
+                                } else if (fieldType == Boolean.class) {
+                                    value = Boolean.valueOf(value.toString());
+                                }  else {
+                                    throw new IllegalArgumentException("Unsupported type: " + fieldType.getName());
+                                }
+                            }
+
+                            field.set(obj, value); // Gán giá trị đã chuyển đổi vào trường của đối tượng T
                         } catch (NoSuchFieldException e) {
-                            // Nếu không tìm thấy trường, bỏ qua (hoặc có thể log thông báo)
+                            // Nếu không tìm thấy trường, bỏ qua (hoặc log thông báo)
+                            System.out.println("Field not found: " + fieldName);
+                        } catch (IllegalArgumentException | IllegalAccessException e) {
+                            // Xử lý lỗi ánh xạ
+                            System.err.println("Error mapping field: " + fieldName + " - " + e.getMessage());
                         }
                     }
-                    dataList.add(obj);  // Thêm đối tượng vào danh sách
+                    dataList.add(obj); // Thêm đối tượng vào danh sách
                 }
             } catch (MongoException | ReflectiveOperationException e) {
                 System.out.println("Failed to get data from collection: " + e.getMessage());

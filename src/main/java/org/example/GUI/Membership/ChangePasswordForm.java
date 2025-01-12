@@ -1,4 +1,4 @@
-package org.example.Membership;
+package org.example.GUI.Membership;
 
 import javax.swing.*;
 import java.awt.*;

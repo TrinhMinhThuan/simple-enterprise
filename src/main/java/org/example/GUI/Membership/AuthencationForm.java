@@ -1,4 +1,4 @@
-package org.example.Membership;
+package org.example.GUI.Membership;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
