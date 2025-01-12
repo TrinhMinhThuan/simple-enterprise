@@ -1,5 +1,4 @@
-package org.example.CRUD;
-
+package org.example.Output.CRUD;
 
 // Định nghĩa interface Strategy
 public interface CrudStrategy<T> {

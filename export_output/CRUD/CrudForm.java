@@ -1,7 +1,8 @@
-package org.example.CRUD;
-
+package org.example.Output.CRUD;
 
 import org.example.DB.ConnectionManagerSingleton;
+import org.example.GUI.Membership.AuthencationForm;
+import org.example.GUI.Membership.ChangePasswordForm;
 import org.example.TestObject.movies_upcoming;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class CrudForm<T> extends JFrame {
     private JTable table;
-    protected JButton btnAdd, btnUpdate, btnDelete;
+    protected JButton btnAdd, btnUpdate, btnDelete, btnChangePassword;
     private List<T> data;
     protected DefaultTableModel tableModel;
 
@@ -42,11 +43,16 @@ public class CrudForm<T> extends JFrame {
         btnAdd = new JButton("Thêm");
         btnUpdate = new JButton("Cập nhật");
         btnDelete = new JButton("Xóa");
+        btnChangePassword = new JButton("Đổi mật khẩu");
 
         // Lắng nghe sự kiện nút bấm
         btnAdd.addActionListener(e -> addStrategy.execute(this));
         btnUpdate.addActionListener(e -> updateStrategy.execute(this));
         btnDelete.addActionListener(e -> deleteStrategy.execute(this));
+        btnChangePassword.addActionListener(e -> {
+            AuthencationForm changePasswordForm = new ChangePasswordForm();
+            changePasswordForm.createForm();
+        });
 
         // Đặt Layout cho JFrame
         JPanel panel = new JPanel();

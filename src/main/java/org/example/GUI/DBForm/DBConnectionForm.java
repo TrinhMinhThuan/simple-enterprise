@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DBConnectionForm  extends JFrame {
 
@@ -24,7 +25,7 @@ public class DBConnectionForm  extends JFrame {
             DatabaseType.SQLITE, new SQLiteConnectionFactory()
     );
 
-    public static boolean createForm() {
+    public static boolean createForm(AtomicReference<DBClient> connectionRef) {
 
         // Tạo cửa sổ JFrame
         JFrame frame = new JFrame("Database Connection");
@@ -124,10 +125,9 @@ public class DBConnectionForm  extends JFrame {
             DBClient dbConnection = factoryDict.get(dbType).createConnection();
 
             try {
-                ConnectionManagerSingleton.getInstance().closeConnection();
-                ConnectionManagerSingleton.setConnetion(dbConnection);
-                ConnectionManagerSingleton.openConnection(host, username, password, dbName);
-                connectionSuccessful[0] = databaseConnection(host, username, password, dbName);
+                dbConnection.setConnectionDetails(host, username, password, dbName);
+                dbConnection.connect();
+                connectionSuccessful[0] = true;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
                 throw new RuntimeException(ex);
@@ -136,7 +136,9 @@ public class DBConnectionForm  extends JFrame {
             // Thử kết nối đến cơ sở dữ liệu
 
             if (connectionSuccessful[0]) {
+                connectionRef.set(dbConnection);
                 JOptionPane.showMessageDialog(frame, "Connected successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
                 frame.dispose(); // Đóng cửa sổ nếu kết nối thành công
             } else {
                 JOptionPane.showMessageDialog(frame, "Connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -155,44 +157,7 @@ public class DBConnectionForm  extends JFrame {
                 Thread.currentThread().interrupt();
             }
         }
-
         return connectionSuccessful[0];
     }
 
-    // Hàm thử kết nối đến cơ sở dữ liệu
-    private static boolean databaseConnection(String host, String username, String password, String dbName) {
-        try {
-
-            ConnectionManagerSingleton.getInstance().openConnection(host, username, password, dbName);
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace(); // In lỗi nếu kết nối thất bại
-            return false;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void main(String[] args) {
-        // Gọi hàm createForm và in kết quả
-        boolean isConnected = createForm();
-
-        List<String> tableNames = ConnectionManagerSingleton.getInstance().getConnection().getAllEntities();
-
-        // Tạo giao diện
-        DBTableForm dbTableForm = new DBTableForm();
-        boolean isCreated = dbTableForm.createForm(tableNames);
-
-        // Kiểm tra xem giao diện có được tạo thành công hay không
-        if (isCreated) {
-            System.out.println("Giao diện được tạo thành công!");
-        } else {
-            System.out.println("Giao diện không được tạo thành công!");
-        }
-        if (isConnected) {
-            System.out.println("Database connection successful!");
-        } else {
-            System.out.println("Database connection failed.");
-        }
-    }
 }

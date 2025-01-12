@@ -1,44 +1,53 @@
 package org.example;
 
-import org.example.CRUD.AddStrategy;
-import org.example.CRUD.CrudForm;
-import org.example.CRUD.DeleteStrategy;
-import org.example.CRUD.EditStrategy;
 import org.example.DB.ConnectionManagerSingleton;
-import org.example.DB.MongoDB.MongoDBClient;
-import org.example.TestObject.movies_upcoming;
+import org.example.DB.DBClient;
+import org.example.Export.ExportObject;
+import org.example.Export.FolderCopy;
+import org.example.GUI.DBForm.DBConnectionForm;
+import org.example.GUI.DBForm.DBTableForm;
+import org.example.GUI.Membership.AuthencationForm;
+import org.example.GUI.Membership.RegisterForm;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Main {
     public static void main(String[] args) throws Exception{
         Class.forName("org.sqlite.JDBC"); // fix tạm thời
-//        DatabaseConnectionForm form = new DatabaseConnectionForm();
-//        new DatabaseConnectionHandler(form);
-        ConnectionManagerSingleton.setConnetion(new MongoDBClient());
-        ConnectionManagerSingleton.openConnection(
-                "cluster0.dltte.mongodb.net",
-                "user01",
-                "010101",
-                "tmdb_db"
-        );
-        // Tạo danh sách movie_genres
-        List<movies_upcoming> moviesList = ConnectionManagerSingleton.getInstance().getConnection()
-                .getAllDataTable("movies_upcoming", movies_upcoming.class);
 
-        SwingUtilities.invokeLater(() -> {
-            // Tạo form với các chiến lược
-            CrudForm<movies_upcoming> form = new CrudForm<>(
-                    "Quản lý dữ liệu",
-                    new AddStrategy<>(),
-                    new EditStrategy<>(),
-                    new DeleteStrategy<>()
-            );
-
-            // Load dữ liệu vào form
-            form.loadData(moviesList);
-            form.setVisible(true);
-        });
+        FolderCopy.copyFolder("src/main/java/org/example/Output", "export_output/");
+        AtomicReference<DBClient> connectionRef = new AtomicReference<>();
+        DBConnectionForm.createForm(connectionRef);
+        ConnectionManagerSingleton.getInstance().closeConnection();
+        ConnectionManagerSingleton.setConnetion(connectionRef.get());
+        List<String> tableNames = ConnectionManagerSingleton
+                .getInstance().getConnection().getAllEntities();
+        String chooseTableName =  DBTableForm.createForm(tableNames);
+        List<Map<String, String>> objInfor =  ConnectionManagerSingleton
+                .getInstance()
+                .getConnection()
+                .getAllFieldName(chooseTableName);
+        ExportObject.doExport(chooseTableName, objInfor, "export_output/Object/" + chooseTableName + ".java");
+        JOptionPane.showMessageDialog(null, "Export done!");
+        AuthencationForm authencationForm = new RegisterForm();
+        while (true) {
+            if (authencationForm.createForm()) {
+                break;
+            } else {
+                int retry = JOptionPane.showConfirmDialog(
+                        null,
+                        "Are you exit?",
+                        "Exit",
+                        JOptionPane.YES_NO_OPTION
+                );
+                if (retry == JOptionPane.YES_OPTION) {
+                    System.out.println("User chose to exit.");
+                    break;
+                }
+            }
+        }
     }
 }

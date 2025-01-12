@@ -1,8 +1,3 @@
-package org.example.TestObject;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class person {
 	private String name;
 	private LocalDate birth;

@@ -1,7 +1,7 @@
-package org.example.CRUD;// EditForm.java
+package org.example.Output.CRUD;
+
 
 import org.example.DB.ConnectionManagerSingleton;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,27 +10,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EditForm<T> extends JDialog {
+public class AddForm<T> extends JDialog {
 
     private JTextField[] textFields;
     private JButton btnSave;
     private CrudForm<T> crudForm;
-    private T currentObject;
     private List<Field> fields;
 
-    public EditForm(CrudForm<T> crudForm, T currentObject) {
+    public AddForm(CrudForm<T> crudForm) {
         this.crudForm = crudForm;
-        this.currentObject = currentObject;
 
-        setTitle("Cập nhật dữ liệu");
+        setTitle("Thêm mới dữ liệu");
         setModal(true);
 
-        // Lấy các trường của đối tượng T thông qua Reflection
-        fields = Arrays.asList(currentObject.getClass().getDeclaredFields());
+        // Lấy các trường của đối tượng T thông qua Reflection từ đối tượng đầu tiên trong danh sách
+        fields = Arrays.asList(crudForm.getData().get(0).getClass().getDeclaredFields());
 
         // Tạo các text field và labels
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(fields.size() + 1, 2));
+
 
         textFields = new JTextField[fields.size()];
 
@@ -42,18 +41,12 @@ public class EditForm<T> extends JDialog {
             JTextField textField = new JTextField();
             textFields[i] = textField;
 
-            panel.add(label);
-            panel.add(textField);
             if(i == 0) {
                 textField.setEnabled(false);
             }
 
-            // Điền sẵn dữ liệu vào text field
-            try {
-                textField.setText(String.valueOf(field.get(currentObject)));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            panel.add(label);
+            panel.add(textField);
         }
 
         btnSave = new JButton("Lưu");
@@ -69,27 +62,26 @@ public class EditForm<T> extends JDialog {
 
     private void onSave() {
         try {
-            String id = "";
+            // Tạo đối tượng mới từ lớp T
+            T newObject = (T) crudForm.getData().get(0).getClass().getDeclaredConstructor().newInstance();
+
             for (int i = 0; i < fields.size(); i++) {
                 Field field = fields.get(i);
                 field.setAccessible(true);
 
                 String value = textFields[i].getText();
-                if (i == 0) {
-                    id = value;
-                }
                 if (value != null && !value.isEmpty() && !value.equals("null")) {
                     if (field.getType() == String.class) {
-                        field.set(currentObject, value);
+                        field.set(newObject, value);
                     } else if (field.getType() == int.class || field.getType() == Integer.class) {
-                        field.set(currentObject, Integer.parseInt(value));
+                        field.set(newObject, Integer.parseInt(value));
                     } else if (field.getType() == double.class || field.getType() == Double.class) {
-                        field.set(currentObject, Double.parseDouble(value));
+                        field.set(newObject, Double.parseDouble(value));
                     } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
-                        field.set(currentObject, Boolean.parseBoolean(value));
+                        field.set(newObject, Boolean.parseBoolean(value));
                     } else if (field.getType() == Object.class) {
-                        // Xử lý Object: có thể là một đối tượng cụ thể hoặc giá trị mặc định
-                        field.set(currentObject, value);
+                        field.set(newObject, value);  // Bạn có thể thay đổi cách này tùy thuộc vào loại Object cần gán
+
                     } else if (field.getType() == ArrayList.class && value instanceof String) {
                         String stringValue = (String) value;
 
@@ -124,21 +116,20 @@ public class EditForm<T> extends JDialog {
                             }
                         }
                         // Gán danh sách đã chuyển đổi vào trường của đối tượng
-                        field.set(currentObject, convertedList);
+                        field.set(newObject, convertedList);
                     }
                 } else {
-                    field.set(currentObject, null);
+                    field.set(newObject, null);
                 }
             }
 
 
-            ConnectionManagerSingleton.getInstance().getConnection().editElement(
-                    crudForm.getData().get(0).getClass().getSimpleName(), currentObject,
-                    crudForm.getTable().getColumnName(0), id
+            // Cập nhật dữ liệu vào CrudForm
+            crudForm.getData().add(newObject);
+            ConnectionManagerSingleton.getInstance().getConnection().addElement(
+                    crudForm.getData().get(0).getClass().getSimpleName(), newObject
             );
             crudForm.updateTable();
-
-
             this.dispose();  // Đóng form
         } catch (Exception e) {
             e.printStackTrace();

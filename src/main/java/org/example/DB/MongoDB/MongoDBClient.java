@@ -62,7 +62,7 @@ public class MongoDBClient extends DBClient {
                 MongoDatabase database = ((MongoClient) connection).getDatabase(dbName);
                 MongoCollection<Document> collection = database.getCollection(tableName);
 
-                // Chuyển đối tượng object thành Document để lưu vào MongoDB
+                // Chuyển đối tượng object thành Output để lưu vào MongoDB
                 Document doc = new Document();
 
                 for (Field field : object.getClass().getDeclaredFields()) {
@@ -91,10 +91,10 @@ public class MongoDBClient extends DBClient {
                 MongoDatabase database = ((MongoClient) connection).getDatabase(dbName);
                 MongoCollection<Document> collection = database.getCollection(tableName);
 
-                // Chuyển đối tượng object thành Document để cập nhật
+                // Chuyển đối tượng object thành Output để cập nhật
                 Document updatedDoc = new Document();
 
-                // Duyệt qua tất cả các trường của đối tượng và thêm vào Document (trừ _id)
+                // Duyệt qua tất cả các trường của đối tượng và thêm vào Output (trừ _id)
                 for (Field field : object.getClass().getDeclaredFields()) {
                     field.setAccessible(true);  // Cho phép truy cập vào các trường private
                     if (!field.getName().equals("_id")) {  // Loại bỏ trường _id
@@ -217,7 +217,7 @@ public class MongoDBClient extends DBClient {
                 for (Document doc : documents) {
                     T obj = clazz.getDeclaredConstructor().newInstance(); // Khởi tạo đối tượng T
 
-                    // Ánh xạ dữ liệu từ Document vào đối tượng T
+                    // Ánh xạ dữ liệu từ Output vào đối tượng T
                     for (String fieldName : doc.keySet()) {
                         try {
                             Field field = clazz.getDeclaredField(fieldName); // Tìm trường trong lớp T

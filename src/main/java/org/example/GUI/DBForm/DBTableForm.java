@@ -9,16 +9,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DBTableForm {
 
     private static JFrame frame;
 
-    public static boolean createForm(List<String> tableNames) {
+    public static String createForm(List<String> tableNames) {
+        AtomicReference<String> selectedTableName = new AtomicReference<>("");
+
         try {
             frame = new JFrame();
             frame.setTitle("Danh sách bảng trong DB");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(800, 600);
             frame.setLocationRelativeTo(null);
 
@@ -32,11 +35,12 @@ public class DBTableForm {
 
                 // Xử lý sự kiện khi nhấn vào nút
                 tableButton.addActionListener((ActionEvent e) -> {
-                    try {
-                        onTableButtonClick(tableName);
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
+                    int confirm = JOptionPane.showConfirmDialog(frame, "Export " + tableName + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        selectedTableName.set(tableName); // Lưu tên bảng được chọn
+                        frame.dispose(); // Đóng giao diện
                     }
+
                 });
 
                 panel.add(tableButton); // Thêm nút vào panel
@@ -46,20 +50,17 @@ public class DBTableForm {
             frame.add(panel, BorderLayout.CENTER);
 
             frame.setVisible(true);
-            return true; // Giao diện được tạo thành công
+
+            // Chờ cho đến khi frame bị đóng
+            while (frame.isVisible()) {
+                Thread.sleep(100); // Chờ
+            }
+
+            return selectedTableName.get(); // Trả về tên bảng được chọn
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Giao diện không được tạo thành công
+            return null; // Nếu xảy ra lỗi, trả về null
         }
     }
 
-    private static void onTableButtonClick(String tableName) throws Exception {
-        int confirm = JOptionPane.showConfirmDialog(frame, "Export " + tableName + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            List<Map<String, String>> objInfor =  ConnectionManagerSingleton.getInstance().getConnection().getAllFieldName(tableName);
-            ExportObject.doExport(tableName, objInfor, "export_output/" + tableName + ".java");
-            JOptionPane.showMessageDialog(frame, "Export done!");
-
-        }
-    }
 }
