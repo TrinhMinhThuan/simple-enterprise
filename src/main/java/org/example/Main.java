@@ -1,8 +1,11 @@
 package org.example;
 
+import org.example.CRUD.AddStrategy;
+import org.example.CRUD.CrudForm;
+import org.example.CRUD.DeleteStrategy;
+import org.example.CRUD.EditStrategy;
 import org.example.DB.ConnectionManagerSingleton;
 import org.example.DB.MongoDB.MongoDBClient;
-import org.example.GUI.FeatureForm.BaseForm;
 import org.example.TestObject.movies_upcoming;
 
 import javax.swing.*;
@@ -24,11 +27,18 @@ public class Main {
         List<movies_upcoming> moviesList = ConnectionManagerSingleton.getInstance().getConnection()
                 .getAllDataTable("movies_upcoming", movies_upcoming.class);
 
-
         SwingUtilities.invokeLater(() -> {
-            BaseForm<movies_upcoming> baseForm = new BaseForm<>("Quản lý Dữ liệu");
-            baseForm.loadData(moviesList);  // Truyền dữ liệu vào BaseForm
-            baseForm.setVisible(true);
+            // Tạo form với các chiến lược
+            CrudForm<movies_upcoming> form = new CrudForm<>(
+                    "Quản lý dữ liệu",
+                    new AddStrategy<>(),
+                    new EditStrategy<>(),
+                    new DeleteStrategy<>()
+            );
+
+            // Load dữ liệu vào form
+            form.loadData(moviesList);
+            form.setVisible(true);
         });
     }
 }

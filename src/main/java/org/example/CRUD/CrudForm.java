@@ -1,4 +1,8 @@
-package org.example.GUI.FeatureForm;
+package org.example.CRUD;
+
+
+import org.example.DB.ConnectionManagerSingleton;
+import org.example.TestObject.movies_upcoming;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -7,15 +11,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BaseForm<T> extends JFrame {
-
-    protected JTable table;
+public class CrudForm<T> extends JFrame {
+    private JTable table;
     protected JButton btnAdd, btnUpdate, btnDelete;
-    protected List<T> data;
+    private List<T> data;
     protected DefaultTableModel tableModel;
 
-    public BaseForm(String title) {
+    // Các chiến lược CRUD
+    private CrudStrategy<T> addStrategy;
+    private CrudStrategy<T> updateStrategy;
+    private CrudStrategy<T> deleteStrategy;
+
+    public CrudForm(String title, CrudStrategy<T> addStrategy, CrudStrategy<T> updateStrategy, CrudStrategy<T> deleteStrategy) {
         super(title);
+
+        this.addStrategy = addStrategy;
+        this.updateStrategy = updateStrategy;
+        this.deleteStrategy = deleteStrategy;
+
         data = new ArrayList<>();
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
@@ -31,9 +44,9 @@ public class BaseForm<T> extends JFrame {
         btnDelete = new JButton("Xóa");
 
         // Lắng nghe sự kiện nút bấm
-        btnAdd.addActionListener(e -> onAdd());
-        btnUpdate.addActionListener(e -> onUpdate());
-        btnDelete.addActionListener(e -> onDelete());
+        btnAdd.addActionListener(e -> addStrategy.execute(this));
+        btnUpdate.addActionListener(e -> updateStrategy.execute(this));
+        btnDelete.addActionListener(e -> deleteStrategy.execute(this));
 
         // Đặt Layout cho JFrame
         JPanel panel = new JPanel();
@@ -56,16 +69,15 @@ public class BaseForm<T> extends JFrame {
         updateTable();
     }
 
-    // Cập nhật TableModel
-    void updateTable() {
+    // Cập nhật bảng
+    public void updateTable() {
         tableModel.setRowCount(0);
         tableModel.setColumnCount(0);
-
+        data = (List<T>) ConnectionManagerSingleton.getInstance().getConnection()
+                .getAllDataTable(data.get(0).getClass().getSimpleName(), data.get(0).getClass());
         if (!data.isEmpty()) {
             var fields = data.get(0).getClass().getDeclaredFields();
-            String[] columnNames = Arrays.stream(fields)
-                    .map(field -> field.getName())
-                    .toArray(String[]::new);
+            String[] columnNames = Arrays.stream(fields).map(field -> field.getName()).toArray(String[]::new);
             tableModel.setColumnIdentifiers(columnNames);
 
             for (T item : data) {
@@ -73,9 +85,7 @@ public class BaseForm<T> extends JFrame {
                 for (int i = 0; i < fields.length; i++) {
                     try {
                         fields[i].setAccessible(true);
-                        if (fields[i].get(item) != null ) {
-                            row[i] = fields[i].get(item).toString();
-                        }
+                        row[i] = fields[i].get(item);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -85,39 +95,15 @@ public class BaseForm<T> extends JFrame {
         }
     }
 
-    // Thêm dữ liệu mới
-    protected void onAdd() {
-        System.out.println("Thêm mới dữ liệu");
-        AddForm<T> addForm = new AddForm<>(this);  // Mở form AddForm
-        addForm.setVisible(true);
+    // Getter cho bảng và dữ liệu
+    public JTable getTable() {
+        return table;
     }
 
-    protected void onUpdate() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            T selectedItem = data.get(selectedRow);
-            System.out.println("Cập nhật dữ liệu: " + selectedItem);
-            UpdateForm<T> updateForm = new UpdateForm<>(this, selectedItem);  // Mở form UpdateForm
-            updateForm.setVisible(true);
-        }
+    public List<T> getData() {
+        return data;
     }
 
-    // Phương thức gọi khi nhấn nút Xóa
-    protected void onDelete() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            // Xác nhận xóa
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa phần tử này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                // Xóa đối tượng đã chọn
-                data.remove(selectedRow);
 
-                // Cập nhật bảng
-                updateTable();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn phần tử cần xóa.");
-        }
-    }
 
 }
