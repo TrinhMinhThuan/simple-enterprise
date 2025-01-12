@@ -158,14 +158,6 @@ public class ChangePasswordForm extends AuthencationForm{
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // Đợi đến khi cửa sổ được đóng
-        while (frame.isDisplayable()) {
-            try {
-                Thread.sleep(100); // Giảm tải CPU
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
 
         return isSuccess[0];
     }

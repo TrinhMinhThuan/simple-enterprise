@@ -8,6 +8,7 @@ import org.example.Output.CRUD.CrudForm;
 import org.example.Output.CRUD.DeleteStrategy;
 import org.example.Output.CRUD.EditStrategy;
 import org.example.TestObject.movies_upcoming;
+import org.example.TestObject.person;
 
 import javax.swing.*;
 import java.util.List;
@@ -44,23 +45,19 @@ public class Main__ {
         ConnectionManagerSingleton.getInstance().closeConnection();
         ConnectionManagerSingleton.setConnetion(connectionRef.get());
 
+        List<person> moviesList = ConnectionManagerSingleton.getInstance().getConnection()
+                .getAllDataTable("person", person.class);
 
-
-        List<movies_upcoming> moviesList = ConnectionManagerSingleton.getInstance().getConnection()
-                .getAllDataTable("movies_upcoming", movies_upcoming.class);
-
-        SwingUtilities.invokeLater(() -> {
             // Tạo form với các chiến lược
-            CrudForm<movies_upcoming> form = new CrudForm<>(
+            CrudForm<person> form = new CrudForm<>(
                     "Quản lý dữ liệu",
+                    person.class,
                     new AddStrategy<>(),
                     new EditStrategy<>(),
                     new DeleteStrategy<>()
             );
-
             // Load dữ liệu vào form
             form.loadData(moviesList);
             form.setVisible(true);
-        });
     }
 }

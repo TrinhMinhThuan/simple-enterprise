@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class DeleteStrategy<T> implements CrudStrategy<T> {
     @Override
-    public void execute(CrudForm<T> crudForm) {
+    public void execute(CrudForm<T> crudForm, Class<?> clazz) {
         int selectedRow = crudForm.getTable().getSelectedRow();
         if (selectedRow != -1) {
             // Xác nhận xóa
@@ -17,7 +17,7 @@ public class DeleteStrategy<T> implements CrudStrategy<T> {
                 String id = firstColumnValue.toString();
                 ConnectionManagerSingleton.getInstance()
                         .getConnection().deleteElement(
-                                crudForm.getData().get(0).getClass().getSimpleName(),
+                                clazz.getSimpleName(),
                                 crudForm.getTable().getColumnName(0), id
                         );
 

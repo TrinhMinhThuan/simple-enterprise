@@ -91,16 +91,6 @@ public class ExportObject {
             return "ObjectId";
         }
         if (
-                type.equalsIgnoreCase("date")
-        ) {
-            return "LocalDate";
-        }
-        if (
-                type.equalsIgnoreCase("datetime")
-        ) {
-            return "LocalDateTime";
-        }
-        if (
                 type.equalsIgnoreCase("timestamp")
         ) {
             return "Timestamp";

@@ -3,7 +3,7 @@ package org.example.GUI.Membership;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public abstract class AuthencationForm {
+public abstract class AuthencationForm  {
 
     public abstract boolean createForm();
 
