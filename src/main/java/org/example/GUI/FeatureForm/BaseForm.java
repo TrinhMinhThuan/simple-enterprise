@@ -1,4 +1,4 @@
-package org.example.Form;
+package org.example.GUI.FeatureForm;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -73,7 +73,9 @@ public class BaseForm<T> extends JFrame {
                 for (int i = 0; i < fields.length; i++) {
                     try {
                         fields[i].setAccessible(true);
-                        row[i] = fields[i].get(item);
+                        if (fields[i].get(item) != null ) {
+                            row[i] = fields[i].get(item).toString();
+                        }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
