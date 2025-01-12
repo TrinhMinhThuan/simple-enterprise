@@ -14,9 +14,10 @@ public class SQLiteTable extends Table{
     public void setRecords(Object resultSet) throws Exception {
         System.out.println("Setting SQLite Table Records.");
         if (resultSet instanceof ResultSet) {
-            while (((ResultSet) resultSet).next()) {
-                this.records.add(new SQLiteRecord(resultSet));
-                System.out.println(resultSet);
+            ResultSet tempResultSet =(ResultSet) resultSet;
+            while (tempResultSet.next()) {
+                this.records.add(new SQLiteRecord(tempResultSet));
+                System.out.println(tempResultSet.getInt("id"));
             }
         } else {
             System.out.println("Invalid ormRecords type.");
