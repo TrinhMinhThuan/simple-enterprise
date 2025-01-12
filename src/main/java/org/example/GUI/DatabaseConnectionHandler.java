@@ -1,9 +1,12 @@
 package org.example.GUI;
 
 import org.example.DB.ConnectionManagerSingleton;
-import org.example.DB.DBConnectionFactory.*;
+import org.example.DB.DBClient;
+import org.example.DB.DBClientFactory;
+import org.example.DB.MongoDB.MongoDBClientFactory;
+import org.example.DB.MySQL.MySQLClientFactory;
+import org.example.DB.SQLite.SQLiteConnectionFactory;
 import org.example.DB.DatabaseType;
-import org.example.DB.DBConnection.DBConnection;
 
 import java.util.Map;
 import javax.swing.*;
@@ -11,9 +14,9 @@ import javax.swing.*;
 public class DatabaseConnectionHandler {
 
     private DatabaseConnectionForm form;
-    private Map<DatabaseType, DBConnectionFactory> factoryDict = Map.of(
-        DatabaseType.MYSQL, new MySQLConnectionFactory(),
-        DatabaseType.MONGODB, new MongoDBConnectionFactory(),
+    private Map<DatabaseType, DBClientFactory> factoryDict = Map.of(
+        DatabaseType.MYSQL, new MySQLClientFactory(),
+        DatabaseType.MONGODB, new MongoDBClientFactory(),
         DatabaseType.SQLITE, new SQLiteConnectionFactory()
     );
 
@@ -33,9 +36,9 @@ public class DatabaseConnectionHandler {
 
         try {
             ConnectionManagerSingleton.getInstance().closeConnection();
-            DBConnection dbConnection = factoryDict.get(dbType).createConnection();
-            ConnectionManagerSingleton.getInstance().setConnetion(dbConnection);
-            ConnectionManagerSingleton.getInstance().openConnection(host, username, password, dbName);
+            DBClient dbConnection = factoryDict.get(dbType).createConnection();
+            ConnectionManagerSingleton.setConnetion(dbConnection);
+            ConnectionManagerSingleton.openConnection(host, username, password, dbName);
             ConnectionManagerSingleton.getInstance().getConnection().getAllEntities();
 
             JOptionPane.showMessageDialog(form.getFrame(), dbType.name() + " connection established successfully.");

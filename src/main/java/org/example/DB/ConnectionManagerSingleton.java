@@ -1,15 +1,11 @@
 package org.example.DB;
 
-import java.sql.SQLException;
-
-import org.example.DB.DBConnection.DBConnection;
-
 public class ConnectionManagerSingleton {
 
     private static ConnectionManagerSingleton instance;
 
     // Biến tĩnh để lưu kết nối duy nhất
-    private static DBConnection currentConnection = null;
+    private static DBClient currentConnection = null;
 
 
     // Private constructor để ngăn tạo instance từ bên ngoài
@@ -23,27 +19,27 @@ public class ConnectionManagerSingleton {
         return instance;
     }
 
-    public void setConnetion (DBConnection connetion) {
+    public static void setConnetion (DBClient connetion) {
         currentConnection = connetion;
     }
 
 
 
     // Phương thức mở kết nối mới
-    public void openConnection(String uri, String username, String password, String dbName) throws SQLException {
+    public static void openConnection(String uri, String username, String password, String dbName) throws Exception {
         // Mở kết nối mới và lưu vào biến tĩnh
         currentConnection.setConnectionDetails(uri, username, password, dbName);
         currentConnection.connect();
     }
 
-    public void openConnection() throws SQLException {
+    public void openConnection() throws Exception {
         // Mở kết nối mới và lưu vào biến tĩnh
         currentConnection.connect();
     }
 
 
     // Phương thức đóng kết nối
-    public void closeConnection() throws SQLException {
+    public void closeConnection() throws Exception {
         if (currentConnection != null) {
             currentConnection.disconnect();
             currentConnection = null;
@@ -51,7 +47,7 @@ public class ConnectionManagerSingleton {
     }
 
     // Phương thức để lấy kết nối
-    public DBConnection getConnection() {
+    public DBClient getConnection() {
         return currentConnection;
     }
 
