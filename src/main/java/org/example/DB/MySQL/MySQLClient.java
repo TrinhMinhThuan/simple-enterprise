@@ -3,6 +3,7 @@ package org.example.DB.MySQL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.example.DB.DBClient;
 import org.example.DB.Record;
@@ -26,7 +27,7 @@ public class MySQLClient extends DBClient {
     }
 
     @Override
-    public List<Table> getAllEntities() throws SQLException {
+    public List<Table> getAllTables() throws SQLException {
         if (connection != null) {
             List<Table> tables = new ArrayList<>();
             try {
@@ -95,5 +96,41 @@ public class MySQLClient extends DBClient {
     protected boolean deleteOnDB(Record r) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteOnDB'");
+    }
+
+    @Override
+    public boolean addElement(String tableName, Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addElement'");
+    }
+
+    @Override
+    public boolean editElement(String tableName, Object object, String key, Object value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'editElement'");
+    }
+
+    @Override
+    public boolean deleteElement(String tableName, String key, Object value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteElement'");
+    }
+
+    @Override
+    public List<Map<String, String>> getAllFieldName(String tableName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllFieldName'");
+    }
+
+    @Override
+    public List<String> getAllEntities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllEntities'");
+    }
+
+    @Override
+    public <T> List<T> getAllDataTable(String tableName, Class<T> clazz) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllDataTable'");
     }
 }

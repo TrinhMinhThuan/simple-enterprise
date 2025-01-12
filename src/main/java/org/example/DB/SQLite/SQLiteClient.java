@@ -6,6 +6,7 @@ import org.example.DB.Table;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SQLiteClient extends DBClient {
 
@@ -22,7 +23,7 @@ public class SQLiteClient extends DBClient {
     }
 
     @Override
-    public List<Table> getAllEntities() throws Exception {
+    public List<Table> getAllTables() throws Exception {
         if (connection != null) {
             List<Table> tables = new ArrayList<>();
             try {
@@ -62,14 +63,15 @@ public class SQLiteClient extends DBClient {
 
     @Override
     public void getAllRecords(Table table) throws Exception {
+        System.out.println("getAllRecords...!" + table.getClass().toString() +  table.getClass().getTypeName());
         if (connection != null && table instanceof SQLiteTable) {
+            System.out.println("launch");
             try {
                 Statement stmt = ((Connection) connection).createStatement(
                     ResultSet.TYPE_FORWARD_ONLY,
                     ResultSet.CONCUR_UPDATABLE
                 );
                 String query = "SELECT * FROM " + table.name;
-                System.out.println("getAllRecords...!");
                 ResultSet resultSet = stmt.executeQuery(query);
                 table.setRecords(resultSet);
                 System.out.println("Fetch all data successfully!");
@@ -109,5 +111,41 @@ public class SQLiteClient extends DBClient {
     protected boolean deleteOnDB(Record r) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteOnDB'");
+    }
+
+    @Override
+    public boolean addElement(String tableName, Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addElement'");
+    }
+
+    @Override
+    public boolean editElement(String tableName, Object object, String key, Object value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'editElement'");
+    }
+
+    @Override
+    public boolean deleteElement(String tableName, String key, Object value) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteElement'");
+    }
+
+    @Override
+    public List<Map<String, String>> getAllFieldName(String tableName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllFieldName'");
+    }
+
+    @Override
+    public List<String> getAllEntities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllEntities'");
+    }
+
+    @Override
+    public <T> List<T> getAllDataTable(String tableName, Class<T> clazz) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllDataTable'");
     }
 }

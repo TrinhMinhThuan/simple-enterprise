@@ -1,5 +1,6 @@
 package org.example.DB;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DBClient {
 
@@ -30,8 +31,8 @@ public abstract class DBClient {
     public abstract void disconnect() throws Exception;
 
     // Phương thức trừu tượng getAllEntities để lấy thông tin về các entities (bảng)
-    public abstract List<Table> getAllEntities() throws Exception; // Adapter Pattern
-
+    public abstract List<Table> getAllTables() throws Exception; // Adapter Pattern
+    public abstract List<String> getAllEntities();
     // Phương thức trừu tượng để lấy tất cả thông tin và gán vào bảng table.
     public abstract void getAllRecords(Table table) throws Exception;
 
@@ -53,4 +54,13 @@ public abstract class DBClient {
     public boolean deleteRecord(Record r) {
         return deleteOnDB(r) && commitChange();
     }
+
+    public abstract boolean addElement(String tableName, Object object);
+    public abstract boolean editElement(String tableName, Object object,
+                                        String key, //Tên khóa chính để tìm
+                                        Object value); // Gía trị khóa chính
+    public abstract boolean deleteElement(String tableName, String key, Object value);
+    public abstract List<Map<String,String>> getAllFieldName(String tableName);
+    public abstract <T> List<T> getAllDataTable(String tableName, Class<T> clazz);
+
 }
