@@ -31,29 +31,7 @@ public abstract class DBClient {
     public abstract void disconnect() throws Exception;
 
     // Phương thức trừu tượng getAllEntities để lấy thông tin về các entities (bảng)
-    public abstract List<Table> getAllTables() throws Exception; // Adapter Pattern
     public abstract List<String> getAllEntities();
-    // Phương thức trừu tượng để lấy tất cả thông tin và gán vào bảng table.
-    public abstract void getAllRecords(Table table) throws Exception;
-
-    // Các phương thức trừu tượng thay đổi CSDL bằng đối tượng ORM.
-    // Template Method
-    protected abstract boolean commitChange(); // Lưu thay đổi
-
-    protected abstract boolean addToDB(Record r);
-    public boolean addRecord(Record r) {
-        return addToDB(r) && commitChange();
-    }
-
-    protected abstract boolean updateToDB(Record r, String column, Object value);
-    public boolean updateRecord(Record r, String column, Object value) {
-        return updateToDB(r, column, value) && commitChange();
-    }
-
-    protected abstract boolean deleteOnDB(Record r);
-    public boolean deleteRecord(Record r) {
-        return deleteOnDB(r) && commitChange();
-    }
 
     public abstract boolean addElement(String tableName, Object object);
     public abstract boolean editElement(String tableName, Object object,
