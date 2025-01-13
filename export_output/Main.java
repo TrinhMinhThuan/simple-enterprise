@@ -38,12 +38,12 @@ public class Main {
 			ConnectionManagerSingleton.getInstance().closeConnection();
 			ConnectionManagerSingleton.setConnetion(connectionRef.get());
 
-			List<movies_upcoming> itemsList = ConnectionManagerSingleton.getInstance().getConnection()
-					.getAllDataTable("movies_upcoming", movies_upcoming.class);
+			List<person> itemsList = ConnectionManagerSingleton.getInstance().getConnection()
+					.getAllDataTable("person", person.class);
 
-			CrudForm<movies_upcoming> form = new CrudForm<>(
+			CrudForm<person> form = new CrudForm<>(
 				"Quản lý dữ liệu",
-				movies_upcoming.class,
+				person.class,
 				new AddStrategy<>(),
 				new EditStrategy<>(),
 				new DeleteStrategy<>()

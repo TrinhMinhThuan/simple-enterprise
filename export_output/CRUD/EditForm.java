@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class EditForm<T> extends JDialog {
 
@@ -133,10 +134,19 @@ public class EditForm<T> extends JDialog {
                 }
             }
 
+            int index = 0;
+            for (int i = 0; i < crudForm.getTable().getColumnCount(); i++) {
+                if (Objects.equals(crudForm.getTable().getColumnName(i), "_id")
+                        || Objects.equals(crudForm.getTable().getColumnName(i), "id")) {
+                    index = i;
+                    break;
+                }
+            }
 
             ConnectionManagerSingleton.getInstance().getConnection().editElement(
                     clazz.getSimpleName(), currentObject,
-                    crudForm.getTable().getColumnName(0), id
+                    crudForm.getTable().getColumnName(index),
+                    crudForm.getTable().getValueAt(crudForm.getTable().getSelectedRow(), index)
             );
             crudForm.updateTable();
 

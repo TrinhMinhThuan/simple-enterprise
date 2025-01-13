@@ -47,9 +47,7 @@ public class EditForm<T> extends JDialog {
 
             panel.add(label);
             panel.add(textField);
-            if(i == 0) {
-                textField.setEnabled(false);
-            }
+
 
             // Điền sẵn dữ liệu vào text field
             try {
@@ -78,9 +76,7 @@ public class EditForm<T> extends JDialog {
                 field.setAccessible(true);
 
                 String value = textFields[i].getText();
-                if (i == 0) {
-                    id = value;
-                }
+
                 if (value != null && !value.isEmpty() && !value.equals("null")) {
                     if (field.getType() == String.class) {
                         field.set(currentObject, value);
