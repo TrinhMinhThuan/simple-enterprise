@@ -1,6 +1,5 @@
-1. Tạo một project maven java.
-2. Lấy file pom.xml trong thư mục export_output và thêm các dependency library vào thư viện pom.xml của project hiện tại.
-3. Thêm các file còn lại trong thư mục export_output vào project.
-4. Thêm thư viện .jar vào dependency project.
-5. Import các thư viện cần thiết và cài đặt package trong các file.
-6. Run code.
+1. Tạo project maven.
+2. Copy các defendencies file pom.xml vào project và install các thư viện.
+3. Thêm thư viện .jar vào denfendency của project.
+4. Vào các file để import thư viện cần thiết.
+5. Run code.

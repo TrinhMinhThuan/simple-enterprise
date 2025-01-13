@@ -1,4 +1,4 @@
-package org.example.Output.CRUD;
+
 
 import org.example.DB.ConnectionManagerSingleton;
 
@@ -17,16 +17,18 @@ public class EditForm<T> extends JDialog {
     private CrudForm<T> crudForm;
     private T currentObject;
     private List<Field> fields;
+    private Class<?> clazz;
 
-    public EditForm(CrudForm<T> crudForm, T currentObject) {
+    public EditForm(CrudForm<T> crudForm, T currentObject, Class<?> clazz) {
         this.crudForm = crudForm;
         this.currentObject = currentObject;
+        this.clazz = clazz;
 
         setTitle("Cập nhật dữ liệu");
         setModal(true);
 
         // Lấy các trường của đối tượng T thông qua Reflection
-        fields = Arrays.asList(currentObject.getClass().getDeclaredFields());
+        fields = Arrays.asList(clazz.getDeclaredFields());
 
         // Tạo các text field và labels
         JPanel panel = new JPanel();
@@ -133,7 +135,7 @@ public class EditForm<T> extends JDialog {
 
 
             ConnectionManagerSingleton.getInstance().getConnection().editElement(
-                    crudForm.getData().get(0).getClass().getSimpleName(), currentObject,
+                    clazz.getSimpleName(), currentObject,
                     crudForm.getTable().getColumnName(0), id
             );
             crudForm.updateTable();

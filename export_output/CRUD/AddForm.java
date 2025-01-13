@@ -1,4 +1,3 @@
-package org.example.Output.CRUD;
 
 
 import org.example.DB.ConnectionManagerSingleton;
@@ -16,15 +15,16 @@ public class AddForm<T> extends JDialog {
     private JButton btnSave;
     private CrudForm<T> crudForm;
     private List<Field> fields;
+    private Class<?> clazz;
 
-    public AddForm(CrudForm<T> crudForm) {
+    public AddForm(CrudForm<T> crudForm, Class<?> clazz) {
         this.crudForm = crudForm;
-
+        this.clazz = clazz;
         setTitle("Thêm mới dữ liệu");
         setModal(true);
 
         // Lấy các trường của đối tượng T thông qua Reflection từ đối tượng đầu tiên trong danh sách
-        fields = Arrays.asList(crudForm.getData().get(0).getClass().getDeclaredFields());
+        fields = Arrays.asList(clazz.getDeclaredFields());
 
         // Tạo các text field và labels
         JPanel panel = new JPanel();
@@ -40,10 +40,6 @@ public class AddForm<T> extends JDialog {
             JLabel label = new JLabel(field.getName());
             JTextField textField = new JTextField();
             textFields[i] = textField;
-
-            if(i == 0) {
-                textField.setEnabled(false);
-            }
 
             panel.add(label);
             panel.add(textField);
@@ -63,7 +59,7 @@ public class AddForm<T> extends JDialog {
     private void onSave() {
         try {
             // Tạo đối tượng mới từ lớp T
-            T newObject = (T) crudForm.getData().get(0).getClass().getDeclaredConstructor().newInstance();
+            T newObject = (T) clazz.getDeclaredConstructor().newInstance();
 
             for (int i = 0; i < fields.size(); i++) {
                 Field field = fields.get(i);
@@ -127,7 +123,7 @@ public class AddForm<T> extends JDialog {
             // Cập nhật dữ liệu vào CrudForm
             crudForm.getData().add(newObject);
             ConnectionManagerSingleton.getInstance().getConnection().addElement(
-                    crudForm.getData().get(0).getClass().getSimpleName(), newObject
+                    clazz.getSimpleName(), newObject
             );
             crudForm.updateTable();
             this.dispose();  // Đóng form

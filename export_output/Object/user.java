@@ -4,8 +4,8 @@ public class user {
 	private String email;
 	private String password;
 	private Integer face_embed_id;
-	private LocalDateTime created_at;
-	private LocalDateTime updated_at;
+	private Object created_at;
+	private Object updated_at;
 	private Integer id;
 	public user() {}
 }

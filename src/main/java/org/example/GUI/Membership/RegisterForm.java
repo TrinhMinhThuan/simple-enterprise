@@ -123,7 +123,13 @@ public class RegisterForm extends AuthencationForm{
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
+        while (frame.isDisplayable()) {
+            try {
+                Thread.sleep(100); // Giảm tải CPU
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         return isSuccess[0];
     }
 

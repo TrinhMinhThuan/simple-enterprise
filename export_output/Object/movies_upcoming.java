@@ -1,11 +1,5 @@
-package org.example.TestObject;
-
-import org.bson.types.ObjectId;
-
-import java.util.ArrayList;
-
-public class movies_popular {
-	private ObjectId _id;
+public class movies_upcoming {
+	private Object _id;
 	private Integer tmdb_id;
 	private ObjectId adult;
 	private String backdrop_path;
@@ -19,7 +13,7 @@ public class movies_popular {
 	private String release_date;
 	private String title;
 	private ObjectId video;
-	private Integer vote_average;
+	private Double vote_average;
 	private Integer vote_count;
-	public movies_popular() {}
+	public movies_upcoming() {}
 }

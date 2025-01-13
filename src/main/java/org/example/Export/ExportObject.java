@@ -80,15 +80,10 @@ public class ExportObject {
             return "ArrayList";
         }
         if (
-                type.equalsIgnoreCase("objectid")
-        ) {
-            return "ObjectId";
-        }
-        if (
                 type.equalsIgnoreCase("boolean")
                 || type.equalsIgnoreCase("bool")
         ) {
-            return "ObjectId";
+            return "Boolean";
         }
         if (
                 type.equalsIgnoreCase("timestamp")

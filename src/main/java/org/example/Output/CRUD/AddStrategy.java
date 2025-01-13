@@ -1,4 +1,3 @@
-package org.example.Output.CRUD;
 
 
 public class AddStrategy<T> implements CrudStrategy<T> {

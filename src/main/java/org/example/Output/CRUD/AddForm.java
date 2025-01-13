@@ -1,4 +1,3 @@
-package org.example.Output.CRUD;
 
 
 import org.example.DB.ConnectionManagerSingleton;
