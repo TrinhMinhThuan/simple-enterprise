@@ -1,14 +1,10 @@
 package org.example.GUI.DBForm;
 
 
-import org.example.DB.ConnectionManagerSingleton;
-import org.example.Export.ExportObject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DBTableForm {

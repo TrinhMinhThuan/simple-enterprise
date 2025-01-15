@@ -26,15 +26,6 @@ public class ExportObject {
             // Thêm thuộc tính với kiểu dữ liệu tương ứng
             sourceCode.append("\tprivate ").append(getType(fieldType)).append(" ").append(fieldName).append(";\n");
 
-            // Getter
-//            sourceCode.append("\tpublic ").append(fieldType).append(" get").append(capitalize(fieldName)).append("() {\n");
-//            sourceCode.append("\t\treturn this.").append(fieldName).append(";\n");
-//            sourceCode.append("\t}\n");
-//
-//            // Setter
-//            sourceCode.append("\tpublic void set").append(capitalize(fieldName)).append("(").append(fieldType).append(" ").append(fieldName).append(") {\n");
-//            sourceCode.append("\t\tthis.").append(fieldName).append(" = ").append(fieldName).append(";\n");
-//            sourceCode.append("\t}\n\n");
         }
 
         // Constructor mặc định

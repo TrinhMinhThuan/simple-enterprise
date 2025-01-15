@@ -1,6 +1,5 @@
 package org.example.GUI.DBForm;
 
-import org.example.DB.ConnectionManagerSingleton;
 import org.example.DB.DBClient;
 import org.example.DB.DBClientFactory;
 import org.example.DB.DatabaseType;
@@ -10,9 +9,7 @@ import org.example.DB.SQLite.SQLiteConnectionFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
