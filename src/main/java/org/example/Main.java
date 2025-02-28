@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Main {
+public class GIMain {
     public static void main(String[] args) throws Exception{
         Class.forName("org.sqlite.JDBC"); // fix tạm thời
 
