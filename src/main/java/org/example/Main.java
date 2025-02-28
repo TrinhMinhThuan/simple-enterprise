@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class GIMain {
+public class Main {
     public static void main(String[] args) throws Exception{
-        Class.forName("org.sqlite.JDBC"); // fix tạm thời
-
         FolderCopy.copyFolder("src/main/java/org/example/Output/", "export_output/");
         AtomicReference<DBClient> connectionRef = new AtomicReference<>();
         DBConnectionForm.createForm(connectionRef);
